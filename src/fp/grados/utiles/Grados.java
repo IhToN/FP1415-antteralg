@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import fp.grados.tipos.Asignatura;
+import fp.grados.tipos.AsignaturaImpl;
 import fp.grados.tipos.Beca;
 import fp.grados.tipos.BecaImpl;
 import fp.grados.tipos.Categoria;
@@ -115,8 +118,10 @@ public class Grados {
 		actualizaPoblacionalesBeca(res);
 		return res;
 	}
-	public static Beca createBeca(Beca beca){
-		Beca res = new BecaImpl(beca.getCodigo(), beca.getCuantiaTotal(), beca.getDuracion(), beca.getTipo());
+
+	public static Beca createBeca(Beca beca) {
+		Beca res = new BecaImpl(beca.getCodigo(), beca.getCuantiaTotal(),
+				beca.getDuracion(), beca.getTipo());
 		actualizaPoblacionalesBeca(res);
 		return res;
 	}
@@ -146,7 +151,8 @@ public class Grados {
 		}
 		return res;
 	}
-	private static void actualizaPoblacionalesBeca(Beca beca){
+
+	private static void actualizaPoblacionalesBeca(Beca beca) {
 		becas.add(beca);
 		switch (beca.getTipo()) {
 		case ORDINARIA:
@@ -164,8 +170,42 @@ public class Grados {
 	}
 
 	// endregion
-	//
-	//
+	// region Asignatura
+	private static Map<String, Asignatura> asignaturas = new HashMap<String, Asignatura>();
+
+	// TODO Hacer createAsignatura por Parámetros
+	public static Asignatura createAsignatura(String asignatura) {
+		Asignatura res = new AsignaturaImpl(asignatura);
+		asignaturas.put(res.getCodigo(), res);
+		return res;
+	}
+
+	public static List<Asignatura> createAsignaturas(String nombreFichero) {
+		List<Asignatura> res = leeFichero(nombreFichero,
+				s -> createAsignatura(s));
+		return res;
+	}
+
+	public static Integer getNumAsignaturasCreadas() {
+		return asignaturas.size();
+	}
+
+	public static Set<Asignatura> getAsignaturasCreadas() {
+		return new HashSet<Asignatura>(asignaturas.values());
+	}
+
+	public static Set<String> getCodigosAsignaturasCreadas() {
+		return new HashSet<String>(asignaturas.keySet());
+	}
+
+	public static Asignatura getAsignaturaCreada(String codigo) {
+		if (!asignaturas.containsKey(codigo))
+			throw new IllegalArgumentException(
+					"Grados.getAsignaturaCreada:: La asignatura no está creada");
+		return asignaturas.get(codigo);
+	}
+
+	// endregion
 	//
 	//
 	//
