@@ -22,6 +22,7 @@ import fp.grados.tipos.DepartamentoImpl;
 import fp.grados.tipos.Profesor;
 import fp.grados.tipos.ProfesorImpl;
 import fp.grados.tipos.ProfesorImpl2;
+import fp.grados.tipos.TipoAsignatura;
 import fp.grados.tipos.TipoBeca;
 import fp.grados.tipos.Tutoria;
 
@@ -112,7 +113,19 @@ public class Grados {
 	private static Set<Beca> becas = new HashSet<Beca>();
 	private static Integer[] numBecasPorTipo = { 0, 0, 0 };
 
-	// TODO resto de createBecas
+	public static Beca createBeca(String codigo, Double cuantiaTotal, Integer duracion,
+			TipoBeca tipo){
+		Beca res = new BecaImpl(codigo, cuantiaTotal, duracion, tipo);
+		actualizaPoblacionalesBeca(res);
+		return res;
+	}
+	
+	public static Beca createBeca(String codigo, TipoBeca tipo){
+		Beca res = new BecaImpl(codigo, tipo);
+		actualizaPoblacionalesBeca(res);
+		return res;
+	}
+
 	public static Beca createBeca(String beca) {
 		Beca res = new BecaImpl(beca);
 		actualizaPoblacionalesBeca(res);
@@ -123,6 +136,12 @@ public class Grados {
 		Beca res = new BecaImpl(beca.getCodigo(), beca.getCuantiaTotal(),
 				beca.getDuracion(), beca.getTipo());
 		actualizaPoblacionalesBeca(res);
+		return res;
+	}
+	
+	public static List<Beca> createBecas(String nombreFichero) {
+		List<Beca> res = leeFichero(nombreFichero,
+				s -> createBeca(s));
 		return res;
 	}
 
@@ -173,7 +192,13 @@ public class Grados {
 	// region Asignatura
 	private static Map<String, Asignatura> asignaturas = new HashMap<String, Asignatura>();
 
-	// TODO Hacer createAsignatura por Parámetros
+	public static Asignatura createAsignatura(String nombre, String codigo, Double creditos,
+			TipoAsignatura tipo, Integer curso, Departamento departamento) {
+		Asignatura res = new AsignaturaImpl(nombre, codigo, creditos, tipo, curso, departamento);
+		asignaturas.put(res.getCodigo(), res);
+		return res;
+	}
+
 	public static Asignatura createAsignatura(String asignatura) {
 		Asignatura res = new AsignaturaImpl(asignatura);
 		asignaturas.put(res.getCodigo(), res);
@@ -206,10 +231,21 @@ public class Grados {
 	}
 
 	// endregion
-	//
-	//
-	//
-	//
+	// region Alumno
+	//TODO To la mierda del alunno
+	// endregion
+	// region Espacio
+	//TODO To la mierda del espacio
+	// endregion
+	// region Despacho
+	//TODO To la mierda del despacho
+	// endregion
+	// region Grado
+	//TODO To la mierda del grado
+	// endregion
+	// region Centro
+	//TODO To la mierda del centro
+	// endregion
 
 	public static <T> List<T> leeFichero(String nombreFichero,
 			Function<String, T> funcion_deString_aT) {
