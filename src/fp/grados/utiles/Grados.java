@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,18 +15,29 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import fp.grados.tipos.Alumno;
+import fp.grados.tipos.AlumnoImpl;
 import fp.grados.tipos.Asignatura;
 import fp.grados.tipos.AsignaturaImpl;
 import fp.grados.tipos.Beca;
 import fp.grados.tipos.BecaImpl;
 import fp.grados.tipos.Categoria;
+import fp.grados.tipos.Centro;
+import fp.grados.tipos.CentroImpl;
 import fp.grados.tipos.Departamento;
 import fp.grados.tipos.DepartamentoImpl;
+import fp.grados.tipos.Despacho;
+import fp.grados.tipos.DespachoImpl;
+import fp.grados.tipos.Espacio;
+import fp.grados.tipos.EspacioImpl;
+import fp.grados.tipos.Grado;
+import fp.grados.tipos.GradoImpl;
 import fp.grados.tipos.Profesor;
 import fp.grados.tipos.ProfesorImpl;
 import fp.grados.tipos.ProfesorImpl2;
 import fp.grados.tipos.TipoAsignatura;
 import fp.grados.tipos.TipoBeca;
+import fp.grados.tipos.TipoEspacio;
 import fp.grados.tipos.Tutoria;
 
 public class Grados {
@@ -232,19 +246,194 @@ public class Grados {
 
 	// endregion
 	// region Alumno
-	//TODO To la mierda del alunno
+	private static Set<Alumno> alumnos = new HashSet<Alumno>();
+
+	public static Alumno createAlumno(String dni, String nombre, String apellidos,
+			LocalDate fechaNacimiento, String email) {
+		Alumno res = new AlumnoImpl(dni, nombre, apellidos, fechaNacimiento, email);
+		alumnos.add(res);
+		return res;
+	}
+	
+	public static Alumno createAlumno(Alumno alumno) {
+		Alumno res = new AlumnoImpl(alumno.getDNI(), alumno.getNombre(), alumno.getApellidos(), alumno.getFechaNacimiento(), alumno.getEmail());
+		alumnos.add(res);
+		return res;
+	}
+	
+	public static Alumno createAlumno(String alumno) {
+		Alumno res = new AlumnoImpl(alumno);
+		alumnos.add(res);
+		return res;
+	}
+	
+	public static List<Alumno> createAlumnos(String nombreFichero) {
+		List<Alumno> res = leeFichero(nombreFichero,
+				s -> createAlumno(s));
+		return res;
+	}
+	
+	public static Integer getNumAlumnosCreados(){
+		return alumnos.size();
+	}
+	
+	public static Set<Alumno> getAlumnosCreados(){
+		return new HashSet<Alumno>(alumnos);
+	}
+	
 	// endregion
 	// region Espacio
-	//TODO To la mierda del espacio
+	private static Set<Espacio> espacios = new HashSet<Espacio>();
+	
+	public static Espacio createEspacio(TipoEspacio tipo, String nombre, Integer capacidad,
+			Integer planta){
+		Espacio res = new EspacioImpl(tipo, nombre, capacidad, planta);
+		espacios.add(res);
+		return res;
+	}
+	
+	public static Espacio createEspacio(Espacio espacio){
+		Espacio res = new EspacioImpl(espacio.getTipo(), espacio.getNombre(), espacio.getCapacidad(), espacio.getPlanta());
+		espacios.add(res);
+		return res;
+	}
+	
+	public static Espacio createEspacio(String espacio){
+		Espacio res = new EspacioImpl(espacio);
+		espacios.add(res);
+		return res;
+	}
+	
+	public static List<Espacio> createEspacios(String nombreFichero){
+		List<Espacio> res = leeFichero(nombreFichero,
+				s -> createEspacio(s));
+		return res;
+	}
+	
+	public static Integer getNumEspaciosCreados(){
+		return espacios.size();
+	}
+	
+	public static Set<Espacio> getEspaciosCreados(){
+		return new HashSet<Espacio>(espacios);
+	}
+	
+	public static Integer getPlantaMayorEspacio(){
+		List<Espacio> le = new ArrayList<Espacio>(espacios);
+		Collections.sort(le, Comparator.comparing(Espacio::getPlanta));
+		return le.get(0).getPlanta();
+	}
+	
+	public static Integer getPlantaMenorEspacio(){
+		List<Espacio> le = new ArrayList<Espacio>(espacios);
+		Collections.sort(le, Comparator.comparing(Espacio::getPlanta));
+		Collections.reverse(le);
+		return le.get(0).getPlanta();
+	}
+	
 	// endregion
 	// region Despacho
-	//TODO To la mierda del despacho
+	public static Despacho createDespacho(String nombre, Integer capacidad, Integer planta){
+		Despacho res = new DespachoImpl(nombre, capacidad, planta);
+		return res;
+	}
+	
+	public static Despacho createDespacho(Despacho despacho){
+		Despacho res = new DespachoImpl(despacho.getNombre(), despacho.getCapacidad(), despacho.getPlanta(), despacho.getProfesores());
+		return res;
+	}
+	
+	public static Despacho createDespacho(String despacho){
+		Despacho res = new DespachoImpl(despacho);
+		return res;
+	}
+	
+	public static List<Despacho> createDespachos(String nombreFichero){
+		List<Despacho> res = leeFichero(nombreFichero,
+				s -> createDespacho(s));
+		return res;
+	}
 	// endregion
 	// region Grado
 	//TODO To la mierda del grado
+	public static Set<Grado> grados = new HashSet<Grado>();
+	
+	public static Grado createGrado(String nombre, Set<Asignatura> asignaturasObligatorias,
+			Set<Asignatura> asignaturasOptativas,
+			Double numeroMinimoCreditosOptativas){
+		Grado res = new GradoImpl(nombre, asignaturasObligatorias, asignaturasOptativas, numeroMinimoCreditosOptativas);
+		grados.add(res);
+		return res;
+	}
+	
+	public static Integer getNumGradosCreados(){
+		return grados.size();
+	}
+	
+	public static Set<Grado> getGradosCreados(){
+		return new HashSet<Grado>(grados);
+	}
+	
+	public static Integer getMediaAsignaturasGrados(){
+		//TODO No entiendo esto
+		return 0;
+	}
+	
+	public static Integer getMediaAsignaturasObligatoriasGrados(){
+		//TODO No entiendo esto
+		return 0;
+	}
+	
+	public static Integer getMediaAsignaturasOptativasGrados(){
+		//TODO No entiendo esto
+		return 0;
+	}
 	// endregion
 	// region Centro
-	//TODO To la mierda del centro
+	private static Set<Centro> centros;
+	
+	public static Centro createCentro(String nombre, String direccion, Integer numPlantas,
+			Integer numSotanos){
+		Centro res = new CentroImpl(nombre, direccion, numPlantas, numSotanos);
+		centros.add(res);
+		return res;
+	}
+	
+	public static Centro createCentro(Centro centro){
+		Centro res = new CentroImpl(centro.getNombre(), centro.getDireccion(), centro.getNumeroPlantas(), centro.getNumeroSotanos());
+		centros.add(res);
+		return res;
+	}
+	
+	public static Integer getNumCentrosCreados(){
+		return centros.size();
+	}
+	
+	public static Set<Centro> getCentrosCreados(){
+		return new HashSet<Centro>(centros);
+	}
+	
+	public static Integer getMaxPlantas(){
+		List<Centro> le = new ArrayList<Centro>(centros);
+		Collections.sort(le, Comparator.comparing(Centro::getNumeroPlantas));
+		return le.get(0).getNumeroPlantas();
+	}
+	
+	public static Integer getMaxSotanos(){
+		List<Centro> le = new ArrayList<Centro>(centros);
+		Collections.sort(le, Comparator.comparing(Centro::getNumeroSotanos));
+		return le.get(0).getNumeroSotanos();
+	}
+	
+	public static Integer getMediaPlantas(){
+		//TODO No entiendo esto
+		return 0;
+	}
+	
+	public static Integer getMediaSotanos(){
+		//TODO No entiendo esto
+		return 0;
+	}
 	// endregion
 
 	public static <T> List<T> leeFichero(String nombreFichero,
