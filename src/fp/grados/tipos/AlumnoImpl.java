@@ -124,7 +124,7 @@ public class AlumnoImpl extends PersonaImpl implements Alumno {
 		return res;
 	}
 
-	/* Boletín 12 */
+	/** Boletín 12 **/
 	public SortedSet<Asignatura> getAsignaturasOrdenadasPorCurso() {
 		SortedSet<Asignatura> res = new TreeSet<Asignatura>(Comparator
 				.comparing(Asignatura::getCurso).reversed()

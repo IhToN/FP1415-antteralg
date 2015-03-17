@@ -1,8 +1,10 @@
 package fp.grados.tipos;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -156,6 +158,14 @@ public class GradoImpl implements Grado {
 		for(Asignatura aop : this.getAsignaturasOptativas()){
 			res.put(aop, aop.getCreditos());
 		}
+		return res;
+	}
+
+	/* Boletín 12 */
+	public SortedSet<Departamento> getDepartamentosOrdenadosPorAsignaturas() {
+		Comparator<Departamento> cmp = Comparator.comparing((Departamento d1) -> d1.getAsignaturas().size()).reversed();
+		// Otra opción: Comparator<Departamento> cmp = Comparator.comparing(d1 -> d1.getAsignaturas().size(), Comparator.reversedOrder());
+		SortedSet<Departamento> res = new TreeSet<>(cmp.thenComparing(Comparator.naturalOrder()));
 		return res;
 	}
 

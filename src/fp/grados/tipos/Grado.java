@@ -2,6 +2,7 @@ package fp.grados.tipos;
 
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 
 public interface Grado extends Comparable<Grado> {
 	String getNombre();
@@ -27,4 +28,7 @@ public interface Grado extends Comparable<Grado> {
 	Asignatura getAsignatura(String codigo);
 	
 	SortedMap<Asignatura, Double> getCreditosPorAsignatura();
+	
+	/* Boletín 12 */
+	SortedSet<Departamento> getDepartamentosOrdenadosPorAsignaturas();
 }

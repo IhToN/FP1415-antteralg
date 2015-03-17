@@ -167,9 +167,9 @@ public class CentroImpl implements Centro {
 		if (getEspacios().size() == 0)
 			throw new ExcepcionCentroOperacionNoPermitida(
 					"CentroImpl.getEspacioMayorCapacidad:: El centro no tiene ningún espacio.");
-		Espacio ret = new EspacioImpl(TipoEspacio.OTRO, "Vacio", 1, 1);
+		Espacio ret = null;
 		for (Espacio e : getEspacios()) {
-			if (e.getCapacidad() >= ret.getCapacidad())
+			if (ret == null || e.getCapacidad() >= ret.getCapacidad())
 				ret = e;
 		}
 		return ret;
@@ -208,7 +208,7 @@ public class CentroImpl implements Centro {
 		}
 	}
 
-	/* Boletín 12 */
+	/** Boletín 12 **/
 	public SortedSet<Espacio> getEspaciosOrdenadosPorCapacidad() {
 		SortedSet<Espacio> res = new TreeSet<>(Comparator
 				.comparing(Espacio::getCapacidad).reversed()
