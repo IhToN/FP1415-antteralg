@@ -1,5 +1,7 @@
 package fp.grados.tipos;
 
+import java.util.Optional;
+
 import fp.grados.excepciones.ExcepcionCentroOperacionNoPermitida;
 
 public class CentroImpl2 extends CentroImpl {
@@ -11,26 +13,22 @@ public class CentroImpl2 extends CentroImpl {
 	}
 	
 	public Espacio getEspacioMayorCapacidad() {
-		if (getEspacios().size() == 0)
+		Optional<Espacio> ret = this.getEspaciosOrdenadosPorCapacidad().stream().findFirst();
+		if(!ret.isPresent())
 			throw new ExcepcionCentroOperacionNoPermitida(
 					"CentroImpl.getEspacioMayorCapacidad:: El centro no tiene ningún espacio.");
-		Espacio ret = this.getEspaciosOrdenadosPorCapacidad().last();
-		return ret;
+		return ret.get();
 	}
 	
 	/* Opción de clase:
 	 * 
 	 public Espacio getEspacioMayorCapacidad() {
-	 	try{
-			Optional<Espacio> ret = getEspacios().stream.max(Comparator.comparing(Espacio::getCapacidad));
-			if (ret.isPresent()){
-				
-			}
-			return ret;
-		}catch(Exception e){
+		Optional<Espacio> ret = getEspacios().stream.max(Comparator.comparing(Espacio::getCapacidad));
+		if (!ret.isPresent())
 			throw new ExcepcionCentroOperacionNoPermitida(
-					"CentroImpl.getEspacioMayorCapacidad:: El centro no tiene ningún espacio.");
-		}
+				"CentroImpl.getEspacioMayorCapacidad:: El centro no tiene ningún espacio.");
+		
+		return ret.get();
 	 }
 	 * 
 	 */

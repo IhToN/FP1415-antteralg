@@ -28,4 +28,7 @@ public interface Departamento extends Comparable<Departamento> {
 	
 	public SortedMap<Asignatura, SortedSet<Profesor>> getProfesoresPorAsignatura();
 	public SortedMap<Profesor, SortedSet<Tutoria>> getTutoriasPorProfesor();
+	
+	/** Boletín 12 **/
+	Profesor getProfesorMaximaDedicacionMediaPorAsignatura();
 }

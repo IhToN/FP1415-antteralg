@@ -1,5 +1,6 @@
 package fp.grados.tipos;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -138,6 +139,15 @@ public class DepartamentoImpl implements Departamento {
 		for (Profesor p : this.getProfesores()) {
 			res.put(p, p.getTutorias());
 		}
+		return res;
+	}
+
+	/** Boletín 12 **/
+	public Profesor getProfesorMaximaDedicacionMediaPorAsignatura() {
+		Comparator<Profesor> cmp = Comparator.comparing(p -> p
+				.getDedicacionTotal() / p.getAsignaturas().size());
+		Profesor res = profesores.stream()
+				.filter(p -> !p.getAsignaturas().isEmpty()).max(cmp).get();
 		return res;
 	}
 
