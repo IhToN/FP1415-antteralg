@@ -1,8 +1,10 @@
 package fp.grados.tipos;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -205,5 +207,14 @@ public class CentroImpl implements Centro {
 			res.put(p, d);
 		}
 	}
-	
+
+	/* Boletín 12 */
+	public SortedSet<Espacio> getEspaciosOrdenadosPorCapacidad() {
+		SortedSet<Espacio> res = new TreeSet<>(Comparator
+				.comparing(Espacio::getCapacidad).reversed()
+				.thenComparing(Comparator.naturalOrder()));
+		res.addAll(espacios);
+		return res;
+	}
+
 }

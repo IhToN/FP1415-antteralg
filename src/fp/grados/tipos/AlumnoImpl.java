@@ -1,10 +1,14 @@
 package fp.grados.tipos;
 
-import java.time.LocalDate;	
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import fp.grados.excepciones.ExcepcionAlumnoNoValido;
 import fp.grados.excepciones.ExcepcionAlumnoOperacionNoPermitida;
@@ -14,7 +18,7 @@ public class AlumnoImpl extends PersonaImpl implements Alumno {
 	private Set<Asignatura> asignaturas;
 	private Expediente expediente;
 
-	//region Constructores
+	// region Constructores
 	public AlumnoImpl(String dni, String nombre, String apellidos,
 			LocalDate fechaNacimiento, String email) {
 		super(dni, nombre, apellidos, fechaNacimiento, email);
@@ -24,14 +28,14 @@ public class AlumnoImpl extends PersonaImpl implements Alumno {
 	}
 
 	/* T10 */
-	public AlumnoImpl(String alumno){
+	public AlumnoImpl(String alumno) {
 		super(alumno);
 		checkEmailAlumUsEs(super.getEmail());
 		this.asignaturas = new HashSet<Asignatura>();
 		this.expediente = new ExpedienteImpl();
 	}
-	
-	//endregion
+
+	// endregion
 
 	public void setEmail(String email) {
 		checkEmailAlumUsEs(email);
@@ -107,16 +111,25 @@ public class AlumnoImpl extends PersonaImpl implements Alumno {
 
 	public SortedMap<Asignatura, Calificacion> getCalificacionPorAsignatura() {
 		SortedMap<Asignatura, Calificacion> res = new TreeMap<Asignatura, Calificacion>();
-		for(Nota n : this.getExpediente().getNotas()){
+		for (Nota n : this.getExpediente().getNotas()) {
 			Asignatura a = n.getAsignatura();
 			Calificacion c = n.getCalificacion();
-			if(res.containsKey(a)){
-				if(res.get(a).compareTo(c) < 0)
+			if (res.containsKey(a)) {
+				if (res.get(a).compareTo(c) < 0)
 					res.put(a, c);
-			}else{
+			} else {
 				res.put(a, c);
 			}
 		}
+		return res;
+	}
+
+	/* Boletín 12 */
+	public SortedSet<Asignatura> getAsignaturasOrdenadasPorCurso() {
+		SortedSet<Asignatura> res = new TreeSet<Asignatura>(Comparator
+				.comparing(Asignatura::getCurso).reversed()
+				.thenComparing(Comparator.naturalOrder()));
+		res.addAll(asignaturas);
 		return res;
 	}
 }

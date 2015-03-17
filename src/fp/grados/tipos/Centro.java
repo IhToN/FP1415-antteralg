@@ -2,6 +2,7 @@ package fp.grados.tipos;
 
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 
 public interface Centro extends Comparable<Centro> {
 	String getNombre();
@@ -24,4 +25,7 @@ public interface Centro extends Comparable<Centro> {
 	Espacio getEspacioMayorCapacidad();
 	
 	SortedMap<Profesor, Despacho> getDespachosPorProfesor();
+	
+	/* Boletín 12 */
+	SortedSet<Espacio> getEspaciosOrdenadosPorCapacidad();
 }
