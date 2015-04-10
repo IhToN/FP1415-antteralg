@@ -1,12 +1,16 @@
 package fp.grados.tipos;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import fp.grados.excepciones.ExcepcionCentroOperacionNoPermitida;
 
 public class CentroImpl2 extends CentroImpl {
 
-	/** Bolet�n 12 **/
+	/** Boletin 12 **/
 	public CentroImpl2(String nombre, String direccion, Integer numPlantas,
 	Integer numSotanos) {
 		super(nombre, direccion, numPlantas, numSotanos);
@@ -20,7 +24,7 @@ public class CentroImpl2 extends CentroImpl {
 		return ret.get();
 	}
 
-	/* Opci�n de clase:
+	/* Opcion de clase:
 	*
 	public Espacio getEspacioMayorCapacidad() {
 	Optional<Espacio> ret = getEspacios().stream.max(Comparator.comparing(Espacio::getCapacidad));
