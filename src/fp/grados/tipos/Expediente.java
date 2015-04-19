@@ -8,4 +8,8 @@ public interface Expediente {
 	void nuevaNota(Nota n);
 
 	Double getNotaMedia();
+	
+	/* Boletín 12 */
+	List<Nota> getNotasOrdenadasPorAsignatura();
+	Nota getMejorNota();
 }

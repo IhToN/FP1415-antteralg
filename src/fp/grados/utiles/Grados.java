@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import fp.grados.tipos.Alumno;
 import fp.grados.tipos.AlumnoImpl;
+import fp.grados.tipos.AlumnoImpl2;
 import fp.grados.tipos.Asignatura;
 import fp.grados.tipos.AsignaturaImpl;
 import fp.grados.tipos.Beca;
@@ -24,6 +25,7 @@ import fp.grados.tipos.BecaImpl;
 import fp.grados.tipos.Categoria;
 import fp.grados.tipos.Centro;
 import fp.grados.tipos.CentroImpl;
+import fp.grados.tipos.CentroImpl2;
 import fp.grados.tipos.Departamento;
 import fp.grados.tipos.DepartamentoImpl;
 import fp.grados.tipos.Despacho;
@@ -42,6 +44,12 @@ import fp.grados.tipos.TipoEspacio;
 import fp.grados.tipos.Tutoria;
 
 public class Grados {
+	/** T12 - setUsarJava8 **/
+	private static Boolean usarJava8 = true;
+
+	public static void setUsarJava8(Boolean b) {
+		usarJava8 = b;
+	}
 
 	/** T11 - Factorías **/
 	// region Departamento
@@ -128,14 +136,14 @@ public class Grados {
 	private static Set<Beca> becas = new HashSet<Beca>();
 	private static Integer[] numBecasPorTipo = { 0, 0, 0 };
 
-	public static Beca createBeca(String codigo, Double cuantiaTotal, Integer duracion,
-			TipoBeca tipo){
+	public static Beca createBeca(String codigo, Double cuantiaTotal,
+			Integer duracion, TipoBeca tipo) {
 		Beca res = new BecaImpl(codigo, cuantiaTotal, duracion, tipo);
 		actualizaPoblacionalesBeca(res);
 		return res;
 	}
-	
-	public static Beca createBeca(String codigo, TipoBeca tipo){
+
+	public static Beca createBeca(String codigo, TipoBeca tipo) {
 		Beca res = new BecaImpl(codigo, tipo);
 		actualizaPoblacionalesBeca(res);
 		return res;
@@ -153,10 +161,9 @@ public class Grados {
 		actualizaPoblacionalesBeca(res);
 		return res;
 	}
-	
+
 	public static List<Beca> createBecas(String nombreFichero) {
-		List<Beca> res = leeFichero(nombreFichero,
-				s -> createBeca(s));
+		List<Beca> res = leeFichero(nombreFichero, s -> createBeca(s));
 		return res;
 	}
 
@@ -207,9 +214,11 @@ public class Grados {
 	// region Asignatura
 	private static Map<String, Asignatura> asignaturas = new HashMap<String, Asignatura>();
 
-	public static Asignatura createAsignatura(String nombre, String codigo, Double creditos,
-			TipoAsignatura tipo, Integer curso, Departamento departamento) {
-		Asignatura res = new AsignaturaImpl(nombre, codigo, creditos, tipo, curso, departamento);
+	public static Asignatura createAsignatura(String nombre, String codigo,
+			Double creditos, TipoAsignatura tipo, Integer curso,
+			Departamento departamento) {
+		Asignatura res = new AsignaturaImpl(nombre, codigo, creditos, tipo,
+				curso, departamento);
 		asignaturas.put(res.getCodigo(), res);
 		return res;
 	}
@@ -249,229 +258,269 @@ public class Grados {
 	// region Alumno
 	private static Set<Alumno> alumnos = new HashSet<Alumno>();
 
-	public static Alumno createAlumno(String dni, String nombre, String apellidos,
-			LocalDate fechaNacimiento, String email) {
-		Alumno res = new AlumnoImpl(dni, nombre, apellidos, fechaNacimiento, email);
+	public static Alumno createAlumno(String dni, String nombre,
+			String apellidos, LocalDate fechaNacimiento, String email) {
+		Alumno res;
+		if (usarJava8)
+			res = new AlumnoImpl2(dni, nombre, apellidos, fechaNacimiento,
+					email);
+		else
+			res = new AlumnoImpl(dni, nombre, apellidos, fechaNacimiento, email);
 		alumnos.add(res);
 		return res;
 	}
-	
+
 	public static Alumno createAlumno(Alumno alumno) {
-		Alumno res = new AlumnoImpl(alumno.getDNI(), alumno.getNombre(), alumno.getApellidos(), alumno.getFechaNacimiento(), alumno.getEmail());
+		Alumno res;
+		if (usarJava8)
+			res = new AlumnoImpl2(alumno.getDNI(), alumno.getNombre(),
+					alumno.getApellidos(), alumno.getFechaNacimiento(),
+					alumno.getEmail());
+		else
+			res = new AlumnoImpl(alumno.getDNI(), alumno.getNombre(),
+					alumno.getApellidos(), alumno.getFechaNacimiento(),
+					alumno.getEmail());
 		copiaAsignaturasAlumno(res, alumno);
 		copiaExpedienteAlumno(res, alumno);
 		alumnos.add(res);
 		return res;
 	}
-	
+
 	public static Alumno createAlumno(String alumno) {
-		Alumno res = new AlumnoImpl(alumno);
+		Alumno res;
+		if (usarJava8)
+			res = new AlumnoImpl2(alumno);
+		else
+			res = new AlumnoImpl(alumno);
 		alumnos.add(res);
 		return res;
 	}
-	
+
 	public static List<Alumno> createAlumnos(String nombreFichero) {
-		List<Alumno> res = leeFichero(nombreFichero,
-				s -> createAlumno(s));
+		List<Alumno> res = leeFichero(nombreFichero, s -> createAlumno(s));
 		return res;
 	}
-	
-	private static void copiaAsignaturasAlumno(Alumno res, Alumno alumno){
-		for(Asignatura a : alumno.getAsignaturas()){
+
+	private static void copiaAsignaturasAlumno(Alumno res, Alumno alumno) {
+		for (Asignatura a : alumno.getAsignaturas()) {
 			res.matriculaAsignatura(a);
 		}
 	}
-	
-	private static void copiaExpedienteAlumno(Alumno res, Alumno alumno){
-		for(Nota n : alumno.getExpediente().getNotas()){
-			res.evaluaAlumno(n.getAsignatura(), n.getCursoAcademico(), n.getConvocatoria(), n.getValor());
+
+	private static void copiaExpedienteAlumno(Alumno res, Alumno alumno) {
+		for (Nota n : alumno.getExpediente().getNotas()) {
+			res.evaluaAlumno(n.getAsignatura(), n.getCursoAcademico(),
+					n.getConvocatoria(), n.getValor());
 		}
 	}
-	
-	public static Integer getNumAlumnosCreados(){
+
+	public static Integer getNumAlumnosCreados() {
 		return alumnos.size();
 	}
-	
-	public static Set<Alumno> getAlumnosCreados(){
+
+	public static Set<Alumno> getAlumnosCreados() {
 		return new HashSet<Alumno>(alumnos);
 	}
-	
+
 	// endregion
 	// region Espacio
 	private static Set<Espacio> espacios = new HashSet<Espacio>();
-	
-	public static Espacio createEspacio(TipoEspacio tipo, String nombre, Integer capacidad,
-			Integer planta){
+
+	public static Espacio createEspacio(TipoEspacio tipo, String nombre,
+			Integer capacidad, Integer planta) {
 		Espacio res = new EspacioImpl(tipo, nombre, capacidad, planta);
 		espacios.add(res);
 		return res;
 	}
-	
-	public static Espacio createEspacio(Espacio espacio){
-		Espacio res = new EspacioImpl(espacio.getTipo(), espacio.getNombre(), espacio.getCapacidad(), espacio.getPlanta());
+
+	public static Espacio createEspacio(Espacio espacio) {
+		Espacio res = new EspacioImpl(espacio.getTipo(), espacio.getNombre(),
+				espacio.getCapacidad(), espacio.getPlanta());
 		espacios.add(res);
 		return res;
 	}
-	
-	public static Espacio createEspacio(String espacio){
+
+	public static Espacio createEspacio(String espacio) {
 		Espacio res = new EspacioImpl(espacio);
 		espacios.add(res);
 		return res;
 	}
-	
-	public static List<Espacio> createEspacios(String nombreFichero){
-		List<Espacio> res = leeFichero(nombreFichero,
-				s -> createEspacio(s));
+
+	public static List<Espacio> createEspacios(String nombreFichero) {
+		List<Espacio> res = leeFichero(nombreFichero, s -> createEspacio(s));
 		return res;
 	}
-	
-	public static Integer getNumEspaciosCreados(){
+
+	public static Integer getNumEspaciosCreados() {
 		return espacios.size();
 	}
-	
-	public static Set<Espacio> getEspaciosCreados(){
+
+	public static Set<Espacio> getEspaciosCreados() {
 		return new HashSet<Espacio>(espacios);
 	}
-	
-	public static Integer getPlantaMayorEspacio(){
+
+	public static Integer getPlantaMayorEspacio() {
 		List<Espacio> le = new ArrayList<Espacio>(espacios);
 		Collections.sort(le, Comparator.comparing(Espacio::getPlanta));
 		return le.get(0).getPlanta();
 	}
-	
-	public static Integer getPlantaMenorEspacio(){
+
+	public static Integer getPlantaMenorEspacio() {
 		List<Espacio> le = new ArrayList<Espacio>(espacios);
 		Collections.sort(le, Comparator.comparing(Espacio::getPlanta));
 		Collections.reverse(le);
 		return le.get(0).getPlanta();
 	}
-	
+
 	// endregion
 	// region Despacho
-	public static Despacho createDespacho(String nombre, Integer capacidad, Integer planta){
+	public static Despacho createDespacho(String nombre, Integer capacidad,
+			Integer planta) {
 		Despacho res = new DespachoImpl(nombre, capacidad, planta);
 		return res;
 	}
-	
-	public static Despacho createDespacho(Despacho despacho){
-		Despacho res = new DespachoImpl(despacho.getNombre(), despacho.getCapacidad(), despacho.getPlanta(), despacho.getProfesores());
+
+	public static Despacho createDespacho(Despacho despacho) {
+		Despacho res = new DespachoImpl(despacho.getNombre(),
+				despacho.getCapacidad(), despacho.getPlanta(),
+				despacho.getProfesores());
 		return res;
 	}
-	
-	public static Despacho createDespacho(String despacho){
+
+	public static Despacho createDespacho(String despacho) {
 		Despacho res = new DespachoImpl(despacho);
 		return res;
 	}
-	
-	public static List<Despacho> createDespachos(String nombreFichero){
-		List<Despacho> res = leeFichero(nombreFichero,
-				s -> createDespacho(s));
+
+	public static List<Despacho> createDespachos(String nombreFichero) {
+		List<Despacho> res = leeFichero(nombreFichero, s -> createDespacho(s));
 		return res;
 	}
+
 	// endregion
 	// region Grado
 	public static Set<Grado> grados = new HashSet<Grado>();
-	
-	public static Grado createGrado(String nombre, Set<Asignatura> asignaturasObligatorias,
+
+	public static Grado createGrado(String nombre,
+			Set<Asignatura> asignaturasObligatorias,
 			Set<Asignatura> asignaturasOptativas,
-			Double numeroMinimoCreditosOptativas){
-		Grado res = new GradoImpl(nombre, asignaturasObligatorias, asignaturasOptativas, numeroMinimoCreditosOptativas);
+			Double numeroMinimoCreditosOptativas) {
+		Grado res = new GradoImpl(nombre, asignaturasObligatorias,
+				asignaturasOptativas, numeroMinimoCreditosOptativas);
 		grados.add(res);
 		return res;
 	}
-	
-	public static Integer getNumGradosCreados(){
+
+	public static Integer getNumGradosCreados() {
 		return grados.size();
 	}
-	
-	public static Set<Grado> getGradosCreados(){
+
+	public static Set<Grado> getGradosCreados() {
 		return new HashSet<Grado>(grados);
 	}
-	
-	public static Integer getMediaAsignaturasGrados(){
+
+	public static Integer getMediaAsignaturasGrados() {
 		Integer res = 0;
-		if(grados.isEmpty()) return res;
-		return getMediaAsignaturasObligatoriasGrados() + getMediaAsignaturasOptativasGrados();
+		if (grados.isEmpty())
+			return res;
+		return getMediaAsignaturasObligatoriasGrados()
+				+ getMediaAsignaturasOptativasGrados();
 	}
-	
-	public static Integer getMediaAsignaturasObligatoriasGrados(){
+
+	public static Integer getMediaAsignaturasObligatoriasGrados() {
 		Integer res = 0;
-		if(grados.isEmpty()) return res;
-		for(Grado g : grados){
+		if (grados.isEmpty())
+			return res;
+		for (Grado g : grados) {
 			res += g.getAsignaturasObligatorias().size() / grados.size();
 		}
 		return res;
 	}
-	
-	public static Integer getMediaAsignaturasOptativasGrados(){
+
+	public static Integer getMediaAsignaturasOptativasGrados() {
 		Integer res = 0;
-		if(grados.isEmpty()) return res;
-		for(Grado g : grados){
+		if (grados.isEmpty())
+			return res;
+		for (Grado g : grados) {
 			res += g.getAsignaturasOptativas().size() / grados.size();
 		}
 		return res;
 	}
+
 	// endregion
 	// region Centro
 	private static Set<Centro> centros;
-	
-	public static Centro createCentro(String nombre, String direccion, Integer numPlantas,
-			Integer numSotanos){
-		Centro res = new CentroImpl(nombre, direccion, numPlantas, numSotanos);
+
+	public static Centro createCentro(String nombre, String direccion,
+			Integer numPlantas, Integer numSotanos) {
+		Centro res;
+		if (usarJava8)
+			res = new CentroImpl2(nombre, direccion, numPlantas, numSotanos);
+		else
+			res = new CentroImpl(nombre, direccion, numPlantas, numSotanos);
 		centros.add(res);
 		return res;
 	}
-	
-	public static Centro createCentro(Centro centro){
-		Centro res = new CentroImpl(centro.getNombre(), centro.getDireccion(), centro.getNumeroPlantas(), centro.getNumeroSotanos());
+
+	public static Centro createCentro(Centro centro) {
+		Centro res;
+		if (usarJava8)
+			res = new CentroImpl2(centro.getNombre(), centro.getDireccion(),
+					centro.getNumeroPlantas(), centro.getNumeroSotanos());
+		else
+			res = new CentroImpl(centro.getNombre(), centro.getDireccion(),
+					centro.getNumeroPlantas(), centro.getNumeroSotanos());
 		copiaEspaciosCentro(res, centro);
 		centros.add(res);
 		return res;
 	}
-	
-	private static void copiaEspaciosCentro(Centro res, Centro centro){
-		for(Espacio e : centro.getEspacios()){
+
+	private static void copiaEspaciosCentro(Centro res, Centro centro) {
+		for (Espacio e : centro.getEspacios()) {
 			res.nuevoEspacio(e);
 		}
 	}
-	
-	public static Integer getNumCentrosCreados(){
+
+	public static Integer getNumCentrosCreados() {
 		return centros.size();
 	}
-	
-	public static Set<Centro> getCentrosCreados(){
+
+	public static Set<Centro> getCentrosCreados() {
 		return new HashSet<Centro>(centros);
 	}
-	
-	public static Integer getMaxPlantas(){
+
+	public static Integer getMaxPlantas() {
 		List<Centro> le = new ArrayList<Centro>(centros);
 		Collections.sort(le, Comparator.comparing(Centro::getNumeroPlantas));
 		return le.get(0).getNumeroPlantas();
 	}
-	
-	public static Integer getMaxSotanos(){
+
+	public static Integer getMaxSotanos() {
 		List<Centro> le = new ArrayList<Centro>(centros);
 		Collections.sort(le, Comparator.comparing(Centro::getNumeroSotanos));
 		return le.get(0).getNumeroSotanos();
 	}
-	
-	public static Integer getMediaPlantas(){
+
+	public static Integer getMediaPlantas() {
 		Integer res = 0;
-		if(centros.isEmpty()) return res;
-		for(Centro c : centros){
+		if (centros.isEmpty())
+			return res;
+		for (Centro c : centros) {
 			res += c.getNumeroPlantas() / centros.size();
 		}
 		return res;
 	}
-	
-	public static Integer getMediaSotanos(){
+
+	public static Integer getMediaSotanos() {
 		Integer res = 0;
-		if(centros.isEmpty()) return res;
-		for(Centro c : centros){
+		if (centros.isEmpty())
+			return res;
+		for (Centro c : centros) {
 			res += c.getNumeroSotanos() / centros.size();
 		}
 		return res;
 	}
+
 	// endregion
 
 	public static <T> List<T> leeFichero(String nombreFichero,

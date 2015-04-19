@@ -1,7 +1,11 @@
 package fp.grados.tipos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import fp.grados.excepciones.ExcepcionExpedienteOperacionNoPermitida;
 
@@ -30,12 +34,12 @@ public class ExpedienteImpl implements Expediente {
 		Double ret = 0.0;
 		int i = 0;
 		for (Nota n : getNotas()) {
-			if (n.getValor() >= 5.0){
+			if (n.getValor() >= 5.0) {
 				ret += n.getValor();
 				i++;
 			}
 		}
-		if(i > 0)
+		if (i > 0)
 			ret = ret / i;
 		return ret;
 	}
@@ -70,5 +74,26 @@ public class ExpedienteImpl implements Expediente {
 			throw new ExcepcionExpedienteOperacionNoPermitida(
 					"ExpedienteImpl.nuevaNota:: El alumno ya ha participado en dos convocatorias.");
 		}
+	}
+
+	/** Boletín 12 **/
+	public List<Nota> getNotasOrdenadasPorAsignatura() {
+		Comparator<Nota> cmp = Comparator.comparing(
+				(Nota n1) -> n1.getAsignatura()).thenComparing(
+				Comparator.naturalOrder());
+		List<Nota> res = new ArrayList<Nota>(notas.stream().sorted(cmp)
+				.collect(Collectors.toList()));
+		return res;
+	}
+
+	public Nota getMejorNota() {
+		Comparator<Nota> cmp = Comparator
+				.comparing((Nota n1) -> n1.getMencionHonor())
+				.thenComparing((Nota n1) -> n1.getValor())
+				.thenComparing((Nota n1) -> n1.getConvocatoria())
+				.thenComparing((Nota n1) -> n1.getCursoAcademico())
+				.thenComparing(Comparator.naturalOrder());
+		Nota res = notas.stream().sorted(cmp).findFirst().get();
+		return res;
 	}
 }
