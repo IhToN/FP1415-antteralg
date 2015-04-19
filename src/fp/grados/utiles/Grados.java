@@ -389,18 +389,27 @@ public class Grados {
 	}
 	
 	public static Integer getMediaAsignaturasGrados(){
-		//TODO No entiendo esto
-		return 0;
+		Integer res = 0;
+		if(grados.isEmpty()) return res;
+		return getMediaAsignaturasObligatoriasGrados() + getMediaAsignaturasOptativasGrados();
 	}
 	
 	public static Integer getMediaAsignaturasObligatoriasGrados(){
-		//TODO No entiendo esto
-		return 0;
+		Integer res = 0;
+		if(grados.isEmpty()) return res;
+		for(Grado g : grados){
+			res += g.getAsignaturasObligatorias().size() / grados.size();
+		}
+		return res;
 	}
 	
 	public static Integer getMediaAsignaturasOptativasGrados(){
-		//TODO No entiendo esto
-		return 0;
+		Integer res = 0;
+		if(grados.isEmpty()) return res;
+		for(Grado g : grados){
+			res += g.getAsignaturasOptativas().size() / grados.size();
+		}
+		return res;
 	}
 	// endregion
 	// region Centro
@@ -447,13 +456,21 @@ public class Grados {
 	}
 	
 	public static Integer getMediaPlantas(){
-		//TODO No entiendo esto
-		return 0;
+		Integer res = 0;
+		if(centros.isEmpty()) return res;
+		for(Centro c : centros){
+			res += c.getNumeroPlantas() / centros.size();
+		}
+		return res;
 	}
 	
 	public static Integer getMediaSotanos(){
-		//TODO No entiendo esto
-		return 0;
+		Integer res = 0;
+		if(centros.isEmpty()) return res;
+		for(Centro c : centros){
+			res += c.getNumeroSotanos() / centros.size();
+		}
+		return res;
 	}
 	// endregion
 
