@@ -28,6 +28,7 @@ import fp.grados.tipos.CentroImpl;
 import fp.grados.tipos.CentroImpl2;
 import fp.grados.tipos.Departamento;
 import fp.grados.tipos.DepartamentoImpl;
+import fp.grados.tipos.DepartamentoImpl2;
 import fp.grados.tipos.Despacho;
 import fp.grados.tipos.DespachoImpl;
 import fp.grados.tipos.Espacio;
@@ -57,7 +58,11 @@ public class Grados {
 	private static Set<Departamento> departamentos = new HashSet<Departamento>();
 
 	public static Departamento createDepartamento(String nombre) {
-		Departamento res = new DepartamentoImpl(nombre);
+		Departamento res;
+		if (usarJava8)
+			res = new DepartamentoImpl2(nombre);
+		else
+			res = new DepartamentoImpl(nombre);
 		departamentos.add(res);
 		return res;
 	}

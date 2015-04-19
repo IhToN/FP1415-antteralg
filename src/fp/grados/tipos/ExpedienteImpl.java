@@ -87,11 +87,10 @@ public class ExpedienteImpl implements Expediente {
 	}
 
 	public Nota getMejorNota() {
-		Comparator<Nota> cmp = Comparator
-				.comparing((Nota n1) -> n1.getMencionHonor())
-				.thenComparing((Nota n1) -> n1.getValor())
-				.thenComparing((Nota n1) -> n1.getConvocatoria())
-				.thenComparing((Nota n1) -> n1.getCursoAcademico())
+		Comparator<Nota> cmp = Comparator.comparing(Nota::getMencionHonor)
+				.thenComparing(Nota::getValor).reversed()
+				.thenComparing(Nota::getConvocatoria)
+				.thenComparing(n -> n.getAsignatura().getCurso())
 				.thenComparing(Comparator.naturalOrder());
 		Nota res = notas.stream().sorted(cmp).findFirst().get();
 		return res;

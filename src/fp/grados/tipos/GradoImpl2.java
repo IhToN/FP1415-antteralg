@@ -1,7 +1,11 @@
 package fp.grados.tipos;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class GradoImpl2 extends GradoImpl {
@@ -36,4 +40,37 @@ public class GradoImpl2 extends GradoImpl {
 		return res;
 	}
 
+	public Asignatura getAsignatura(String codigo) {
+		Asignatura res = getAsignaturasObligatorias().stream()
+				.filter(a -> a.getCodigo().equals(codigo)).findAny().get();
+		if (res == null)
+			res = getAsignaturasOptativas().stream()
+					.filter(a -> a.getCodigo().equals(codigo)).findAny().get();
+		return res;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Set<Departamento> getDepartamentos() {
+		Set<Departamento> res = new HashSet<Departamento>();
+		res.addAll((Collection<? extends Departamento>) getAsignaturasObligatorias()
+				.stream().collect(Collectors.toSet()));
+		res.addAll((Collection<? extends Departamento>) getAsignaturasOptativas()
+				.stream().collect(Collectors.toSet()));
+		return res;
+	}
+
+	public Set<Profesor> getProfesores() {
+		Set<Profesor> res = new TreeSet<Profesor>();
+		getDepartamentos().stream().forEach(d -> res.addAll(d.getProfesores()));
+		return res;
+	}
+
+	public SortedMap<Asignatura, Double> getCreditosPorAsignatura() {
+		SortedMap<Asignatura, Double> res = new TreeMap<Asignatura, Double>();
+		getAsignaturasObligatorias().stream().forEach(
+				a -> res.put(a, a.getCreditos()));
+		getAsignaturasOptativas().stream().forEach(
+				a -> res.put(a, a.getCreditos()));
+		return res;
+	}
 }

@@ -31,21 +31,13 @@ public class DepartamentoImpl2 extends DepartamentoImpl {
 	}
 
 	public Boolean existeProfesorAsignado(Asignatura a) {
-		return getProfesores().stream()
-				.filter(p -> p.getAsignaturas().contains(a)).findAny()
-				.isPresent();
+		return getProfesores().stream().anyMatch(
+				p -> p.getAsignaturas().contains(a));
 	}
 
 	public Boolean estanTodasAsignaturasAsignadas() {
-		getAsignaturas().stream();
-		Boolean ret = true;
-		for (Asignatura a : getAsignaturas()) {
-			if (!existeProfesorAsignado(a)) {
-				ret = false;
-				break;
-			}
-		}
-		return ret;
+		return getAsignaturas().stream().allMatch(
+				a -> existeProfesorAsignado(a));
 	}
 
 	public void eliminaAsignacionProfesorado(Asignatura a) {
