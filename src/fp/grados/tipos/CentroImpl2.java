@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import fp.grados.excepciones.ExcepcionCentroOperacionNoPermitida;
@@ -53,6 +54,27 @@ public class CentroImpl2 extends CentroImpl {
 		Integer res = (int) espacios.stream()
 				.filter(e -> e.getTipo().equals(tipo)).count();
 		return res;
+	}
+
+	public Set<Despacho> getDespachos() {
+		Set<Despacho> ret = new TreeSet<Despacho>();
+		getEspacios().stream().filter(e -> e instanceof Despacho)
+				.forEach(e -> ret.add((Despacho) e));
+		return ret;
+	}
+
+	public Set<Despacho> getDespachos(Departamento d) {
+		Set<Despacho> ret = new TreeSet<Despacho>();
+		getDespachos()
+				.stream()
+				.filter(ds -> existeProfesorDepartamento(ds.getProfesores(), d))
+				.forEach(ds -> ret.add(ds));
+		return ret;
+	}
+
+	private boolean existeProfesorDepartamento(Set<Profesor> profesores,
+			Departamento d) {
+		return profesores.stream().anyMatch(p -> p.getDepartamento().equals(d));
 	}
 
 	public Set<Profesor> getProfesores() {
