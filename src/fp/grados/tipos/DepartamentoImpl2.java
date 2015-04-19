@@ -30,4 +30,25 @@ public class DepartamentoImpl2 extends DepartamentoImpl {
 		return res;
 	}
 
+	public Boolean existeProfesorAsignado(Asignatura a) {
+		return getProfesores().stream()
+				.filter(p -> p.getAsignaturas().contains(a)).findAny()
+				.isPresent();
+	}
+
+	public Boolean estanTodasAsignaturasAsignadas() {
+		getAsignaturas().stream();
+		Boolean ret = true;
+		for (Asignatura a : getAsignaturas()) {
+			if (!existeProfesorAsignado(a)) {
+				ret = false;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	public void eliminaAsignacionProfesorado(Asignatura a) {
+		getProfesores().stream().forEach(p -> p.eliminaAsignatura(a));
+	}
 }

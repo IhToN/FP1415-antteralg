@@ -34,6 +34,7 @@ import fp.grados.tipos.Espacio;
 import fp.grados.tipos.EspacioImpl;
 import fp.grados.tipos.Grado;
 import fp.grados.tipos.GradoImpl;
+import fp.grados.tipos.GradoImpl2;
 import fp.grados.tipos.Nota;
 import fp.grados.tipos.Profesor;
 import fp.grados.tipos.ProfesorImpl;
@@ -405,8 +406,13 @@ public class Grados {
 			Set<Asignatura> asignaturasObligatorias,
 			Set<Asignatura> asignaturasOptativas,
 			Double numeroMinimoCreditosOptativas) {
-		Grado res = new GradoImpl(nombre, asignaturasObligatorias,
-				asignaturasOptativas, numeroMinimoCreditosOptativas);
+		Grado res;
+		if (usarJava8)
+			res = new GradoImpl2(nombre, asignaturasObligatorias,
+					asignaturasOptativas, numeroMinimoCreditosOptativas);
+		else
+			res = new GradoImpl(nombre, asignaturasObligatorias,
+					asignaturasOptativas, numeroMinimoCreditosOptativas);
 		grados.add(res);
 		return res;
 	}
