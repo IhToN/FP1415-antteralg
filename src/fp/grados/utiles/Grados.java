@@ -32,6 +32,7 @@ import fp.grados.tipos.Espacio;
 import fp.grados.tipos.EspacioImpl;
 import fp.grados.tipos.Grado;
 import fp.grados.tipos.GradoImpl;
+import fp.grados.tipos.Nota;
 import fp.grados.tipos.Profesor;
 import fp.grados.tipos.ProfesorImpl;
 import fp.grados.tipos.ProfesorImpl2;
@@ -257,6 +258,8 @@ public class Grados {
 	
 	public static Alumno createAlumno(Alumno alumno) {
 		Alumno res = new AlumnoImpl(alumno.getDNI(), alumno.getNombre(), alumno.getApellidos(), alumno.getFechaNacimiento(), alumno.getEmail());
+		copiaAsignaturasAlumno(res, alumno);
+		copiaExpedienteAlumno(res, alumno);
 		alumnos.add(res);
 		return res;
 	}
@@ -271,6 +274,18 @@ public class Grados {
 		List<Alumno> res = leeFichero(nombreFichero,
 				s -> createAlumno(s));
 		return res;
+	}
+	
+	private static void copiaAsignaturasAlumno(Alumno res, Alumno alumno){
+		for(Asignatura a : alumno.getAsignaturas()){
+			res.matriculaAsignatura(a);
+		}
+	}
+	
+	private static void copiaExpedienteAlumno(Alumno res, Alumno alumno){
+		for(Nota n : alumno.getExpediente().getNotas()){
+			res.evaluaAlumno(n.getAsignatura(), n.getCursoAcademico(), n.getConvocatoria(), n.getValor());
+		}
 	}
 	
 	public static Integer getNumAlumnosCreados(){
@@ -355,7 +370,6 @@ public class Grados {
 	}
 	// endregion
 	// region Grado
-	//TODO To la mierda del grado
 	public static Set<Grado> grados = new HashSet<Grado>();
 	
 	public static Grado createGrado(String nombre, Set<Asignatura> asignaturasObligatorias,
@@ -401,8 +415,15 @@ public class Grados {
 	
 	public static Centro createCentro(Centro centro){
 		Centro res = new CentroImpl(centro.getNombre(), centro.getDireccion(), centro.getNumeroPlantas(), centro.getNumeroSotanos());
+		copiaEspaciosCentro(res, centro);
 		centros.add(res);
 		return res;
+	}
+	
+	private static void copiaEspaciosCentro(Centro res, Centro centro){
+		for(Espacio e : centro.getEspacios()){
+			res.nuevoEspacio(e);
+		}
 	}
 	
 	public static Integer getNumCentrosCreados(){
