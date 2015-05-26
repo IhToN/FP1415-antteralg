@@ -152,10 +152,10 @@ public class GradoImpl implements Grado {
 
 	public SortedMap<Asignatura, Double> getCreditosPorAsignatura() {
 		SortedMap<Asignatura, Double> res = new TreeMap<Asignatura, Double>();
-		for(Asignatura aob : this.getAsignaturasObligatorias()){
+		for (Asignatura aob : this.getAsignaturasObligatorias()) {
 			res.put(aob, aob.getCreditos());
 		}
-		for(Asignatura aop : this.getAsignaturasOptativas()){
+		for (Asignatura aop : this.getAsignaturasOptativas()) {
 			res.put(aop, aop.getCreditos());
 		}
 		return res;
@@ -163,9 +163,12 @@ public class GradoImpl implements Grado {
 
 	/* Boletín 12 */
 	public SortedSet<Departamento> getDepartamentosOrdenadosPorAsignaturas() {
-		Comparator<Departamento> cmp = Comparator.comparing((Departamento d1) -> d1.getAsignaturas().size()).reversed();
-		// Otra opción: Comparator<Departamento> cmp = Comparator.comparing(d1 -> d1.getAsignaturas().size(), Comparator.reversedOrder());
+		Comparator<Departamento> cmp = Comparator.comparing(
+				(Departamento d1) -> d1.getAsignaturas().size()).reversed();
+		// Otra opción: Comparator<Departamento> cmp = Comparator.comparing(d1
+		// -> d1.getAsignaturas().size(), Comparator.reversedOrder());
 		SortedSet<Departamento> res = new TreeSet<>(cmp.thenComparing(Comparator.naturalOrder()));
+		res.addAll(getDepartamentos());
 		return res;
 	}
 

@@ -35,13 +35,13 @@ public class TutoriaImpl implements Tutoria {
 	public TutoriaImpl(String tutoria) {
 		// L,15:30,17:30
 		String[] s = tutoria.split(",");
-		if (s.length != 4)
+		if (s.length != 3)
 			throw new IllegalArgumentException(
 					"NotaImpl.ConstructorCadena:: La cadena constructor ha de ser del tipo: Fundamentos de Programación#1234567#12.0#ANUAL#1;2014;PRIMERA;10.0;true");
 		for (int i = 0; i < s.length; i++)
 			s[i] = s[i].trim();
 
-		DayOfWeek diaSemana = DayOfWeek.valueOf(s[0]);
+		DayOfWeek diaSemana = dayFromChar(s[0]);
 		LocalTime horaComienzo = LocalTime.parse(s[1]);
 		LocalTime horaFin = LocalTime.parse(s[2]);
 
@@ -127,5 +127,29 @@ public class TutoriaImpl implements Tutoria {
 
 		return prime * result + getDiaSemana().hashCode()
 				+ getHoraComienzo().hashCode();
+	}
+
+	public static DayOfWeek dayFromChar(String c) {
+		DayOfWeek res = DayOfWeek.SATURDAY;
+		switch (c) {
+		case "L":
+			res = DayOfWeek.MONDAY;
+			break;
+		case "M":
+			res = DayOfWeek.TUESDAY;
+			break;
+		case "X":
+			res = DayOfWeek.WEDNESDAY;
+			break;
+		case "J":
+			res = DayOfWeek.THURSDAY;
+			break;
+		case "V":
+			res = DayOfWeek.FRIDAY;
+			break;
+		default:
+			break;
+		}
+		return res;
 	}
 }

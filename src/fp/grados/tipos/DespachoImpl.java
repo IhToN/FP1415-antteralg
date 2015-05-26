@@ -33,6 +33,7 @@ public class DespachoImpl extends EspacioImpl implements Despacho {
 	public DespachoImpl(String despacho) {
 		// F1.43,1,3
 		super(despacho + ",OTRO");
+		this.profesores = new HashSet<Profesor>();
 	}
 
 	// endregion

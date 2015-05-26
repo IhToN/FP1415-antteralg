@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -254,9 +256,9 @@ public class Grados {
 	}
 
 	public static Asignatura getAsignaturaCreada(String codigo) {
-		if (!asignaturas.containsKey(codigo))
+		/*if (!asignaturas.containsKey(codigo))
 			throw new IllegalArgumentException(
-					"Grados.getAsignaturaCreada:: La asignatura no está creada");
+					"Grados.getAsignaturaCreada:: La asignatura no está creada");*/
 		return asignaturas.get(codigo);
 	}
 
@@ -330,7 +332,7 @@ public class Grados {
 
 	// endregion
 	// region Espacio
-	private static Set<Espacio> espacios = new HashSet<Espacio>();
+	private static SortedSet<Espacio> espacios = new TreeSet<Espacio>();
 
 	public static Espacio createEspacio(TipoEspacio tipo, String nombre,
 			Integer capacidad, Integer planta) {
@@ -358,24 +360,35 @@ public class Grados {
 	}
 
 	public static Integer getNumEspaciosCreados() {
-		return espacios.size();
+		return getEspaciosCreados().size();
 	}
 
-	public static Set<Espacio> getEspaciosCreados() {
-		return new HashSet<Espacio>(espacios);
+	public static SortedSet<Espacio> getEspaciosCreados() {
+		return new TreeSet<Espacio>(espacios);
 	}
 
 	public static Integer getPlantaMayorEspacio() {
-		List<Espacio> le = new ArrayList<Espacio>(espacios);
-		Collections.sort(le, Comparator.comparing(Espacio::getPlanta));
-		return le.get(0).getPlanta();
+		Boolean isFirst = true;
+		Integer res = null;
+		for(Espacio e : getEspaciosCreados()){
+			if(isFirst)
+				res = e.getPlanta();
+			if(e.getPlanta() > res)
+				res = e.getPlanta();
+		}
+		return res;
 	}
 
 	public static Integer getPlantaMenorEspacio() {
-		List<Espacio> le = new ArrayList<Espacio>(espacios);
-		Collections.sort(le, Comparator.comparing(Espacio::getPlanta));
-		Collections.reverse(le);
-		return le.get(0).getPlanta();
+		Boolean isFirst = true;
+		Integer res = null;
+		for(Espacio e : getEspaciosCreados()){
+			if(isFirst)
+				res = e.getPlanta();
+			if(e.getPlanta() < res)
+				res = e.getPlanta();
+		}
+		return res;
 	}
 
 	// endregion
@@ -430,16 +443,16 @@ public class Grados {
 		return new HashSet<Grado>(grados);
 	}
 
-	public static Integer getMediaAsignaturasGrados() {
-		Integer res = 0;
+	public static Double getMediaAsignaturasGrados() {
+		Double res = 0.0;
 		if (grados.isEmpty())
 			return res;
 		return getMediaAsignaturasObligatoriasGrados()
 				+ getMediaAsignaturasOptativasGrados();
 	}
 
-	public static Integer getMediaAsignaturasObligatoriasGrados() {
-		Integer res = 0;
+	public static Double getMediaAsignaturasObligatoriasGrados() {
+		Double res = 0.0;
 		if (grados.isEmpty())
 			return res;
 		for (Grado g : grados) {
@@ -448,8 +461,8 @@ public class Grados {
 		return res;
 	}
 
-	public static Integer getMediaAsignaturasOptativasGrados() {
-		Integer res = 0;
+	public static Double getMediaAsignaturasOptativasGrados() {
+		Double res = 0.0;
 		if (grados.isEmpty())
 			return res;
 		for (Grado g : grados) {
@@ -460,7 +473,7 @@ public class Grados {
 
 	// endregion
 	// region Centro
-	private static Set<Centro> centros;
+	private static Set<Centro> centros = new TreeSet<Centro>();
 
 	public static Centro createCentro(String nombre, String direccion,
 			Integer numPlantas, Integer numSotanos) {
@@ -503,17 +516,17 @@ public class Grados {
 	public static Integer getMaxPlantas() {
 		List<Centro> le = new ArrayList<Centro>(centros);
 		Collections.sort(le, Comparator.comparing(Centro::getNumeroPlantas));
-		return le.get(0).getNumeroPlantas();
+		return centros.isEmpty() ? null : le.get(0).getNumeroPlantas();
 	}
 
 	public static Integer getMaxSotanos() {
 		List<Centro> le = new ArrayList<Centro>(centros);
 		Collections.sort(le, Comparator.comparing(Centro::getNumeroSotanos));
-		return le.get(0).getNumeroSotanos();
+		return centros.isEmpty() ? null : le.get(0).getNumeroSotanos();
 	}
 
-	public static Integer getMediaPlantas() {
-		Integer res = 0;
+	public static Double getMediaPlantas() {
+		Double res = 0.0;
 		if (centros.isEmpty())
 			return res;
 		for (Centro c : centros) {
@@ -522,10 +535,11 @@ public class Grados {
 		return res;
 	}
 
-	public static Integer getMediaSotanos() {
-		Integer res = 0;
+	public static Double getMediaSotanos() {
+		Double res = 0.0;
 		if (centros.isEmpty())
 			return res;
+		else
 		for (Centro c : centros) {
 			res += c.getNumeroSotanos() / centros.size();
 		}

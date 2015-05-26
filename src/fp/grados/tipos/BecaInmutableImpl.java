@@ -124,8 +124,8 @@ public final class BecaInmutableImpl implements BecaInmutable {
 	}
 
 	public boolean equals(Object o) {
-		if (o instanceof Beca) {
-			Beca b = (Beca) o;
+		if (o instanceof BecaInmutable) {
+			BecaInmutable b = (BecaInmutable) o;
 			return getCodigo().equals(b.getCodigo())
 					&& getTipo().equals(b.getTipo());
 		}

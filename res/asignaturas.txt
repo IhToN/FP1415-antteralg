@@ -1,4 +1,3 @@
-Fundamentos de Programacion#1234567#12.0#ANUAL#1
 Fundamentos de Programacion# 2050001# 12.0# ANUAL# 1
 Calculo Infinitesimal y Numerico# 2050002# 6.0# PRIMER_CUATRIMESTRE# 1
 Circuitos Electronicos Digitales# 2050003# 6.0# PRIMER_CUATRIMESTRE# 1

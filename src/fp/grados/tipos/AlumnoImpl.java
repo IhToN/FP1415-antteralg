@@ -1,7 +1,6 @@
 package fp.grados.tipos;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;

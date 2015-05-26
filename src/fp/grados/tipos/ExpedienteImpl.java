@@ -1,8 +1,6 @@
 package fp.grados.tipos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,8 +87,8 @@ public class ExpedienteImpl implements Expediente {
 	public Nota getMejorNota() {
 		Comparator<Nota> cmp = Comparator.comparing(Nota::getMencionHonor)
 				.thenComparing(Nota::getValor).reversed()
-				.thenComparing(Nota::getConvocatoria)
-				.thenComparing(n -> n.getAsignatura().getCurso())
+				.thenComparing(Nota::getConvocatoria).reversed()
+				.thenComparing(n -> n.getAsignatura().getCurso()).reversed()
 				.thenComparing(Comparator.naturalOrder());
 		Nota res = notas.stream().sorted(cmp).findFirst().get();
 		return res;

@@ -1,6 +1,5 @@
 package fp.grados.tipos;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
@@ -49,13 +48,10 @@ public class GradoImpl2 extends GradoImpl {
 		return res;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Set<Departamento> getDepartamentos() {
 		Set<Departamento> res = new HashSet<Departamento>();
-		res.addAll((Collection<? extends Departamento>) getAsignaturasObligatorias()
-				.stream().collect(Collectors.toSet()));
-		res.addAll((Collection<? extends Departamento>) getAsignaturasOptativas()
-				.stream().collect(Collectors.toSet()));
+		getAsignaturasObligatorias().stream().forEach((Asignatura a) -> res.add(a.getDepartamento()));
+		getAsignaturasOptativas().stream().forEach((Asignatura a) -> res.add(a.getDepartamento()));
 		return res;
 	}
 

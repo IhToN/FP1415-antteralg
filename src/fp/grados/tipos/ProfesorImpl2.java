@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import fp.grados.excepciones.ExcepcionProfesorNoValido;
@@ -94,11 +96,8 @@ public class ProfesorImpl2 extends PersonaImpl implements Profesor {
 	public void imparteAsignatura(Asignatura asig, Double dedicacion) {
 		checkAsignaturaDepartamento(asig);
 		checkCreditosAsignatura(asig, dedicacion);
-		if(this.dedicacionPorAsignaturas.containsKey(asig))
-			checkDedicacion(dedicacion - this.dedicacionAsignatura(asig));
-		else
-			checkDedicacion(dedicacion);
 		this.dedicacionPorAsignaturas.put(asig, dedicacion);
+		checkDedicacion(this.getDedicacionTotal());
 	}
 
 	private void checkAsignaturaDepartamento(Asignatura asig) {
@@ -114,16 +113,15 @@ public class ProfesorImpl2 extends PersonaImpl implements Profesor {
 	}
 
 	private void checkDedicacion(Double dedicacion) {
-		if (getDedicacionTotal() + dedicacion > DEDICACION_MAXIMA)
+		if (dedicacion > DEDICACION_MAXIMA)
 			throw new ExcepcionProfesorOperacionNoPermitida(
 					"ProfesorImpl.imparteAsignatura:: Un profesor no puede impartir más de "
 							+ DEDICACION_MAXIMA + " créditos.");
-
 	}
 
 	public Double dedicacionAsignatura(Asignatura asig) {
 		Double res = this.dedicacionPorAsignaturas.get(asig);
-		if(res == null)
+		if (res == null)
 			res = 0.0;
 		return res;
 	}
@@ -133,11 +131,17 @@ public class ProfesorImpl2 extends PersonaImpl implements Profesor {
 	}
 
 	public List<Asignatura> getAsignaturas() {
-		return new ArrayList<Asignatura>(this.dedicacionPorAsignaturas.keySet());
+		return new ArrayList<Asignatura>(this.getDedicacionPorAsignaturas()
+				.keySet());
 	}
 
 	public List<Double> getCreditos() {
-		return new ArrayList<Double>(this.dedicacionPorAsignaturas.values());
+		return new ArrayList<Double>(this.getDedicacionPorAsignaturas()
+				.values());
+	}
+
+	public Map<Asignatura, Double> getDedicacionPorAsignaturas() {
+		return new TreeMap<>(this.dedicacionPorAsignaturas);
 	}
 
 	public Double getDedicacionTotal() {

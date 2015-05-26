@@ -16,8 +16,8 @@ public class DepartamentoImpl implements Departamento {
 
 	public DepartamentoImpl(String nombre) {
 		this.nombre = nombre;
-		this.profesores = new HashSet<Profesor>();
-		this.asignaturas = new HashSet<Asignatura>();
+		this.profesores = new TreeSet<Profesor>();
+		this.asignaturas = new TreeSet<Asignatura>();
 	}
 
 	public int compareTo(Departamento arg0) {
@@ -50,7 +50,7 @@ public class DepartamentoImpl implements Departamento {
 	}
 
 	public Set<Asignatura> getAsignaturas() {
-		return new HashSet<Asignatura>(asignaturas);
+		return new TreeSet<Asignatura>(asignaturas);
 	}
 
 	public void nuevoProfesor(Profesor prof) {

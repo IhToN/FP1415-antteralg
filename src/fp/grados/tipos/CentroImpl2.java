@@ -39,7 +39,7 @@ public class CentroImpl2 extends CentroImpl {
 	*
 	*/
 
-	public Integer[] getConteoEspacios() {
+	public Integer[] getConteosEspacios() {
 		Set<Espacio> espacios = getEspacios();
 		Integer[] res = { cuentaEspacio(TipoEspacio.TEORIA, espacios),
 				cuentaEspacio(TipoEspacio.LABORATORIO, espacios),
