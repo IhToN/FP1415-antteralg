@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -370,11 +367,11 @@ public class Grados {
 	public static Integer getPlantaMayorEspacio() {
 		Boolean isFirst = true;
 		Integer res = null;
-		for(Espacio e : getEspaciosCreados()){
-			if(isFirst)
+		for (Espacio e : getEspaciosCreados()) {
+			if (isFirst || res < e.getPlanta()) {
+				isFirst = false;
 				res = e.getPlanta();
-			if(e.getPlanta() > res)
-				res = e.getPlanta();
+			}
 		}
 		return res;
 	}
@@ -382,11 +379,11 @@ public class Grados {
 	public static Integer getPlantaMenorEspacio() {
 		Boolean isFirst = true;
 		Integer res = null;
-		for(Espacio e : getEspaciosCreados()){
-			if(isFirst)
+		for (Espacio e : getEspaciosCreados()) {
+			if (isFirst || res > e.getPlanta()) {
+				isFirst = false;
 				res = e.getPlanta();
-			if(e.getPlanta() < res)
-				res = e.getPlanta();
+			}
 		}
 		return res;
 	}
@@ -456,9 +453,9 @@ public class Grados {
 		if (grados.isEmpty())
 			return res;
 		for (Grado g : grados) {
-			res += g.getAsignaturasObligatorias().size() / grados.size();
+			res += g.getAsignaturasObligatorias().size();
 		}
-		return res;
+		return res / grados.size();
 	}
 
 	public static Double getMediaAsignaturasOptativasGrados() {
@@ -466,9 +463,9 @@ public class Grados {
 		if (grados.isEmpty())
 			return res;
 		for (Grado g : grados) {
-			res += g.getAsignaturasOptativas().size() / grados.size();
+			res += g.getAsignaturasOptativas().size();
 		}
-		return res;
+		return res / grados.size();
 	}
 
 	// endregion
@@ -514,36 +511,45 @@ public class Grados {
 	}
 
 	public static Integer getMaxPlantas() {
-		List<Centro> le = new ArrayList<Centro>(centros);
-		Collections.sort(le, Comparator.comparing(Centro::getNumeroPlantas));
-		return centros.isEmpty() ? null : le.get(0).getNumeroPlantas();
+		Boolean isFirst = true;
+		Integer res = null;
+		for (Centro c2 : centros) {
+			if (isFirst || c2.getNumeroPlantas() > res) {
+				isFirst = false;
+				res = c2.getNumeroPlantas();
+			}
+		}
+		return res;
 	}
 
 	public static Integer getMaxSotanos() {
-		List<Centro> le = new ArrayList<Centro>(centros);
-		Collections.sort(le, Comparator.comparing(Centro::getNumeroSotanos));
-		return centros.isEmpty() ? null : le.get(0).getNumeroSotanos();
+		Boolean isFirst = true;
+		Integer res = null;
+		for (Centro c2 : centros) {
+			if (isFirst || c2.getNumeroSotanos() > res) {
+				isFirst = false;
+				res = c2.getNumeroSotanos();
+			}
+		}
+		return res;
 	}
 
 	public static Double getMediaPlantas() {
 		Double res = 0.0;
 		if (centros.isEmpty())
 			return res;
-		for (Centro c : centros) {
-			res += c.getNumeroPlantas() / centros.size();
-		}
-		return res;
+		for (Centro c : centros)
+			res += c.getNumeroPlantas();
+		return res / centros.size();
 	}
 
 	public static Double getMediaSotanos() {
 		Double res = 0.0;
 		if (centros.isEmpty())
 			return res;
-		else
-		for (Centro c : centros) {
-			res += c.getNumeroSotanos() / centros.size();
-		}
-		return res;
+		for (Centro c : centros)
+			res += c.getNumeroSotanos();
+		return res / centros.size();
 	}
 
 	// endregion

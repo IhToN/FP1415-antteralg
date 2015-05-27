@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -94,6 +93,8 @@ public class ProfesorImpl2 extends PersonaImpl implements Profesor {
 	}
 
 	public void imparteAsignatura(Asignatura asig, Double dedicacion) {
+		System.out.println("Dep profesor; " + getDepartamento());
+		System.out.println("Dep asignatura; " + asig.getDepartamento());
 		checkAsignaturaDepartamento(asig);
 		checkCreditosAsignatura(asig, dedicacion);
 		this.dedicacionPorAsignaturas.put(asig, dedicacion);
@@ -101,9 +102,10 @@ public class ProfesorImpl2 extends PersonaImpl implements Profesor {
 	}
 
 	private void checkAsignaturaDepartamento(Asignatura asig) {
-		if (!getDepartamento().getAsignaturas().contains(asig))
-			throw new ExcepcionProfesorOperacionNoPermitida(
-					"ProfesorImpl.imparteAsignatura:: Los departamentos de la asignatura y el profesor no se corresponden");
+		if (getDepartamento() != null)
+			if (!getDepartamento().getAsignaturas().contains(asig))
+				throw new ExcepcionProfesorOperacionNoPermitida(
+						"ProfesorImpl.imparteAsignatura:: Los departamentos de la asignatura y el profesor no se corresponden.");
 	}
 
 	private void checkCreditosAsignatura(Asignatura asig, Double dedicacion) {

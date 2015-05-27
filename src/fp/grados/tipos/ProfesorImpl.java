@@ -106,9 +106,10 @@ public class ProfesorImpl extends PersonaImpl implements Profesor {
 	}
 
 	private void checkAsignaturaDepartamento(Asignatura asig) {
-		if (!getDepartamento().getAsignaturas().contains(asig))
-			throw new ExcepcionProfesorOperacionNoPermitida(
-					"ProfesorImpl.imparteAsignatura:: Los departamentos de la asignatura y el profesor no se corresponden");
+		if (getDepartamento() != null)
+			if (!getDepartamento().getAsignaturas().contains(asig))
+				throw new ExcepcionProfesorOperacionNoPermitida(
+						"ProfesorImpl.imparteAsignatura:: Los departamentos de la asignatura y el profesor no se corresponden");
 	}
 
 	private void checkCreditosAsignatura(Asignatura asig, Double dedicacion) {
