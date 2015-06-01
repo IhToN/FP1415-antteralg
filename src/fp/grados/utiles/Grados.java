@@ -44,7 +44,7 @@ import fp.grados.tipos.TipoBeca;
 import fp.grados.tipos.TipoEspacio;
 import fp.grados.tipos.Tutoria;
 
-public class Grados {
+public final class Grados {
 	/** T12 - setUsarJava8 **/
 	private static Boolean usarJava8 = true;
 
