@@ -93,8 +93,6 @@ public class ProfesorImpl2 extends PersonaImpl implements Profesor {
 	}
 
 	public void imparteAsignatura(Asignatura asig, Double dedicacion) {
-		System.out.println("Dep profesor; " + getDepartamento());
-		System.out.println("Dep asignatura; " + asig.getDepartamento());
 		checkAsignaturaDepartamento(asig);
 		checkCreditosAsignatura(asig, dedicacion);
 		this.dedicacionPorAsignaturas.put(asig, dedicacion);
